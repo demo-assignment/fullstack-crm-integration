@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      PORT: "3001"
+      ALLOWED_URLS: ${ALLOWED_URLS:-http://localhost:3000}
+      NOTION_TOKEN: ${NOTION_TOKEN:-}
+      NOTION_DATA_SOURCE_ID: ${NOTION_DATA_SOURCE_ID:-}
+      MAX_FILTER_DEPTH: ${MAX_FILTER_DEPTH:-2}
+    ports:
+      - "${BACKEND_PORT:-3001}:3001"
+
+  frontend:
+    build:
+      context: ./frontend-application
+      args:
+        NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL:-http://localhost:3001}
+    environment:
+      NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL:-http://localhost:3001}
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend

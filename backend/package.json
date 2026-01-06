@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "jest --config jest.config.cjs",
+    "test-coverage": "bun run test --coverage",
+    "dev": "bun run --watch src/index.ts",
+    "build": "rm -rf dist && bun build src/index.ts --outdir dist"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.4.1",
+    "@elysiajs/swagger": "1.3.1",
+    "@notionhq/client": "5.6.0",
+    "elysia": "latest"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "bun-types": "latest",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.3"
+  },
+  "module": "src/index.js"
+}
