@@ -1,6 +1,8 @@
 # Notion Sales CRM (Table View + Sort/Filter) - Fullstack
 
-![Assignment background](assignment_bg.png)
+[![Watch the demo on YouTube](assignment_bg.png)](https://www.youtube.com/watch?v=OohYyQAmHrU)
+
+**Demo video**: https://www.youtube.com/watch?v=OohYyQAmHrU
 
 This repo includes a **Backend (Bun + Elysia)** that queries data from a **Notion Data Source** and a **Frontend (Next.js)** that renders a Sales CRM table with **Sort/Filter**.
 
@@ -271,3 +273,15 @@ docker compose up
 - **CORS error**: verify `ALLOWED_URLS` includes your FE origin (e.g. `http://localhost:3000`) and is in CSV format.
 - **FE cannot reach BE**: verify `NEXT_PUBLIC_BACKEND_API_URL` (local/dev or docker) points to the correct host/port.
 - **Notion auth/data source errors**: verify `NOTION_TOKEN` and `NOTION_DATA_SOURCE_ID`.
+
+---
+
+## Contact
+
+👤 **Phan Quang Minh Long (Mike)**
+💼 **MIS | IT | SWE | FE | Dev**
+🧑‍💻 **Frontend Engineer**
+
+📱 **Phone**: [Zalo (+84) 0852197589](https://zalo.me/0852197589)
+📧 **Email**: [mailto:phanquangminhlong@gmail.com](phanquangminhlong@gmail.com)
+📍 **Location**: Ho Chi Minh City

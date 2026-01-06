@@ -7,13 +7,13 @@ import { Query, useFetchSales } from "@/app/modules/sales-crm/hooks/useFetchSale
 import "tippy.js/dist/tippy.css";
 import { Sort } from "./types/interfaces";
 import SortComponent from "./sort/Sort";
-import FilterComponent from "./filter/Filter";
+import FilterComponent, { createGroup } from "./filter/Filter";
 import { FilterGroup } from "./filter/type/filters";
 
 const SalesCRM: FC = () => {
   const { sales, loading, errorMessage, fetchSales } = useFetchSales();
   const [sorts, setSorts] = useState<Sort[]>([]);
-  const [filters, setFilters] = useState<FilterGroup>({ and: [] });
+  const [filters, setFilters] = useState<FilterGroup>(createGroup());
 
   const onQuerySort = (query?: Query) => {
     fetchSales({ ...query, filter: filters });

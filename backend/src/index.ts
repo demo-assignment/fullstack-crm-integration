@@ -4,7 +4,8 @@ import { Client, PageObjectResponse } from "@notionhq/client";
 import { cors } from "@elysiajs/cors";
 import { parseKey, parsePlainValue } from "./utils/parser";
 import { SortDirection } from "./interfaces/sortDirection";
-import { applyCompoundFilter, validateCompoundFilterDepth } from "./utils/filters";
+import { validateCompoundFilterDepth } from "./utils/filters";
+import { isEmptyGroup, toNotionFilter } from "./utils/notionFilter";
 
 const notion = new Client({
   auth: process.env.NOTION_TOKEN,
@@ -61,9 +62,17 @@ app.group("/api", api => {
       direction: sort.direction === SortDirection.ascending ? SortDirection.ascending : SortDirection.descending,
     }));
 
+    const maxDepth = Number(process.env.MAX_FILTER_DEPTH || "2");
+    if (input.filter) validateCompoundFilterDepth(input.filter, maxDepth);
+
+    const filter = input.filter && !isEmptyGroup(input.filter) ? toNotionFilter(input.filter) : undefined;
+
+    console.log(JSON.stringify(filter, null, 2));
+
     const data = await notion.dataSources.query({
       data_source_id: process.env.NOTION_DATA_SOURCE_ID!,
       sorts: sorts.length > 0 ? sorts : undefined,
+      filter,
       page_size: 100,
     });
 
@@ -78,35 +87,8 @@ app.group("/api", api => {
       }, {} as Record<string, any>);
     });
 
-    const maxDepth = Number(process.env.MAX_FILTER_DEPTH || "2");
-    if (input.filter) {
-      validateCompoundFilterDepth(input.filter, maxDepth);
-      return applyCompoundFilter(rows, input.filter);
-    }
-
     return rows;
   };
-
-  // api.get("/sales", async (ctx: Context) => {
-  //   try {
-  //     const { query } = ctx;
-  //     const { sort } = query || {};
-  //     const sorts = sort
-  //       ? sort.split(",").map((sort: string) => {
-  //           const splittedSort = sort.split(":");
-  //           return {
-  //             property: splittedSort[0],
-  //             direction:
-  //               splittedSort[1] === SortDirection.ascending ? SortDirection.ascending : SortDirection.descending,
-  //           };
-  //         })
-  //       : [];
-
-  //     return await querySales({ sorts });
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // });
 
   api.post("/sales", async (ctx: Context) => {
     try {

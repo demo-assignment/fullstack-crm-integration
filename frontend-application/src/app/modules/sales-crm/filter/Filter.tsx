@@ -68,7 +68,7 @@ const createCondition = (property: FilterableKey = SALE_KEYS.NAME) => {
   } satisfies FilterCondition;
 };
 
-const createGroup = () => ({ and: [createCondition()] } satisfies FilterGroup);
+export const createGroup = () => ({ and: [createCondition()] } satisfies FilterGroup);
 
 const updateNodeAtPath = (
   node: FilterNode,
@@ -141,8 +141,7 @@ const Filter: FC<FilterProps> = props => {
       if (!isGroup(node)) return node;
       const op = getGroupOp(node);
       const next = getGroupItems(node).filter((_, i) => i !== childIndex);
-      //   return buildGroup(op, next.length > 0 ? next : [createCondition()]);
-      return buildGroup(op, next);
+      return buildGroup(op, next.length > 0 ? next : [createCondition()]);
     });
   };
 
@@ -176,7 +175,7 @@ const Filter: FC<FilterProps> = props => {
 
   const clear = () => {
     setUnsaved(false);
-    setRoot({ and: [] });
+    setRoot(createGroup());
     onQuery({ filter: null });
   };
 
@@ -252,7 +251,7 @@ const Filter: FC<FilterProps> = props => {
   ) => {
     const op = getGroupOp(node);
     const children = getGroupItems(node);
-    const isMaxDepth = level - 1 >= maxDepth;
+    const isMaxDepth = level >= maxDepth;
 
     return (
       <div className="flex flex-col gap-2 border border-slate-200 rounded-md p-3" key={path.join(".") || "root"}>
@@ -286,6 +285,7 @@ const Filter: FC<FilterProps> = props => {
         </div>
 
         <div className="flex flex-col gap-2">
+          {children.length === 0 ? <p className="text-slate-500 text-sm">Empty group</p> : null}
           {children.map((child, i) => {
             const childPath = [...path, i];
             if (isGroup(child)) return renderGroup(child, childPath, level + 1, path, i);
