@@ -8,21 +8,21 @@ import { validateCompoundFilterDepth } from "./utils/filters";
 import { isEmptyGroup, toNotionFilter } from "./utils/notionFilter";
 
 const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
+  auth: process?.env?.NOTION_TOKEN || "",
 });
 
 const app = new Elysia();
 
 app.use(
   cors({
-    origin: process.env.ALLOWED_URLS!.split(","),
+    origin: process?.env?.ALLOWED_URLS?.split(",") || "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
 app.listen({
-  port: Number(process.env.PORT || "3001"),
+  port: Number(process?.env?.PORT) || 3001,
   hostname: "0.0.0.0",
 });
 
@@ -62,7 +62,7 @@ app.group("/api", api => {
       direction: sort.direction === SortDirection.ascending ? SortDirection.ascending : SortDirection.descending,
     }));
 
-    const maxDepth = Number(process.env.MAX_FILTER_DEPTH || "2");
+    const maxDepth = Number(process?.env?.MAX_FILTER_DEPTH) || 2;
     if (input.filter) validateCompoundFilterDepth(input.filter, maxDepth);
 
     const filter = input.filter && !isEmptyGroup(input.filter) ? toNotionFilter(input.filter) : undefined;
@@ -70,7 +70,7 @@ app.group("/api", api => {
     console.log(JSON.stringify(filter, null, 2));
 
     const data = await notion.dataSources.query({
-      data_source_id: process.env.NOTION_DATA_SOURCE_ID!,
+      data_source_id: process?.env?.NOTION_DATA_SOURCE_ID || "",
       sorts: sorts.length > 0 ? sorts : undefined,
       filter,
       page_size: 100,

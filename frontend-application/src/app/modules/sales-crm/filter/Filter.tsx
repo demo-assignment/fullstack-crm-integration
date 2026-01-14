@@ -16,7 +16,7 @@ interface FilterProps {
 type FilterableKey = keyof typeof FILTER_OPTIONS;
 type ValueKind = "text" | "number" | "checkbox" | "date";
 
-const MAX_FILTER_DEPTH = process.env.NEXT_PUBLIC_MAX_FILTER_DEPTH;
+const MAX_FILTER_DEPTH = process?.env?.NEXT_PUBLIC_MAX_FILTER_DEPTH;
 
 const isGroup = (node: FilterNode): node is FilterGroup => {
   return typeof (node as any)?.and !== "undefined" || typeof (node as any)?.or !== "undefined";
@@ -98,7 +98,7 @@ const Filter: FC<FilterProps> = props => {
   const [unsaved, setUnsaved] = useState(false);
 
   const maxDepth = useMemo(() => {
-    const raw = Number(MAX_FILTER_DEPTH || "2");
+    const raw = Number(MAX_FILTER_DEPTH) || 2;
     if (!Number.isFinite(raw) || raw <= 0) return 2;
     return Math.floor(raw);
   }, []);
